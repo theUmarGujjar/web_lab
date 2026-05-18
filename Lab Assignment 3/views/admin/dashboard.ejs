@@ -1,0 +1,131 @@
+<%- include('../partials/admin-header') %>
+
+<!-- Dashboard Stats -->
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-info">
+      <span class="stat-label">Total Products</span>
+      <span class="stat-value"><%= products.length %></span>
+    </div>
+    <div class="stat-icon primary">
+      <i class="fa-solid fa-box"></i>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-info">
+      <span class="stat-label">Total Value</span>
+      <span class="stat-value">
+        <% 
+          let totalVal = products.reduce((acc, curr) => acc + (curr.price * curr.stock), 0);
+        %>
+        $<%= totalVal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %>
+      </span>
+    </div>
+    <div class="stat-icon success">
+      <i class="fa-solid fa-dollar-sign"></i>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-info">
+      <span class="stat-label">Low Stock Alerts</span>
+      <span class="stat-value">
+        <% 
+          let lowStockCount = products.filter(p => p.stock <= 5).length;
+        %>
+        <%= lowStockCount %>
+      </span>
+    </div>
+    <div class="stat-icon warning">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+    </div>
+  </div>
+</div>
+
+<!-- Products Table Card -->
+<div class="admin-table-card">
+  <div class="table-header">
+    <h3>Product Catalog Inventory</h3>
+    <a href="/admin/products/new" class="btn-admin btn-admin-primary">
+      <i class="fa-solid fa-plus"></i> Add New Product
+    </a>
+  </div>
+  
+  <div class="admin-table-wrapper">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Category</th>
+          <th>Price</th>
+          <th>Stock</th>
+          <th>Promo Badge</th>
+          <th style="width: 120px;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (products.length === 0) { %>
+          <tr>
+            <td colspan="6" style="text-align: center; padding: 3rem; color: #64748b;">
+              <i class="fa-solid fa-inbox" style="font-size: 2.5rem; margin-bottom: 1rem; display: block; color: #cbd5e1;"></i>
+              No products found in the database. Get started by adding a product!
+            </td>
+          </tr>
+        <% } else { %>
+          <% products.forEach(product => { %>
+            <tr>
+              <td>
+                <div class="admin-prod-cell">
+                  <img src="<%= product.image || '/images/placeholder.jpg' %>" alt="<%= product.name %>" class="admin-prod-img" onerror="this.src='https://placehold.co/100x100?text=Product'"/>
+                  <div class="admin-prod-details">
+                    <span class="admin-prod-name"><%= product.name %></span>
+                    <span class="admin-prod-id">ID: <%= product._id %></span>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <span class="admin-badge category"><%= product.category %></span>
+              </td>
+              <td>
+                <strong>$<%= product.price.toFixed(2) %></strong>
+                <% if (product.originalPrice && product.originalPrice > product.price) { %>
+                  <span style="font-size: 0.8rem; color: #94a3b8; text-decoration: line-through; margin-left: 0.25rem;">
+                    $<%= product.originalPrice.toFixed(2) %>
+                  </span>
+                <% } %>
+              </td>
+              <td>
+                <div class="stock-indicator">
+                  <span class="stock-dot <%= product.stock === 0 ? 'out-of-stock' : (product.stock <= 5 ? 'low-stock' : 'in-stock') %>"></span>
+                  <span><%= product.stock %> units</span>
+                </div>
+              </td>
+              <td>
+                <% if (product.badge) { %>
+                  <span class="admin-badge badge-promo"><%= product.badge %></span>
+                <% } else { %>
+                  <span style="color: #cbd5e1;">—</span>
+                <% } %>
+              </td>
+              <td>
+                <div class="admin-actions">
+                  <a href="/admin/products/<%= product._id %>/edit" class="btn-admin-action" title="Edit Product">
+                    <i class="fa-solid fa-pencil"></i>
+                  </a>
+                  <form action="/admin/products/<%= product._id %>/delete" method="POST" onsubmit="window.confirmDelete(event, this)">
+                    <button type="submit" class="btn-admin-action delete" title="Delete Product">
+                      <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+          <% }) %>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<%- include('../partials/admin-footer') %>

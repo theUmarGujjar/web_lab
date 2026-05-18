@@ -1,0 +1,97 @@
+<%- include('../partials/admin-header') %>
+
+<div class="admin-form-card">
+  <div class="table-header">
+    <h3>Add New Product</h3>
+    <a href="/admin" class="btn-admin btn-admin-secondary">
+      <i class="fa-solid fa-arrow-left"></i> Back to Dashboard
+    </a>
+  </div>
+
+  <% if (typeof error !== 'undefined' && error) { %>
+    <div style="background-color: #fee2e2; border-left: 4px solid #ef4444; color: #b91c1c; padding: 1rem 2rem; font-size: 0.9rem; font-weight: 500;">
+      <i class="fa-solid fa-triangle-exclamation" style="margin-right: 0.5rem;"></i> <%= error %>
+    </div>
+  <% } %>
+
+  <form action="/admin/products" method="POST" enctype="multipart/form-data">
+    <div class="form-grid">
+      
+      <!-- Product Name -->
+      <div class="admin-input-group form-group-full">
+        <label for="name" class="admin-label">Product Name *</label>
+        <input type="text" id="name" name="name" class="admin-input" placeholder="e.g. Sony WH-1000XM4" required />
+      </div>
+
+      <!-- Price -->
+      <div class="admin-input-group">
+        <label for="price" class="admin-label">Selling Price ($) *</label>
+        <input type="number" id="price" name="price" step="0.01" min="0" class="admin-input" placeholder="e.g. 299.99" required />
+      </div>
+
+      <!-- Original Price -->
+      <div class="admin-input-group">
+        <label for="originalPrice" class="admin-label">Original Price ($) *</label>
+        <input type="number" id="originalPrice" name="originalPrice" step="0.01" min="0" class="admin-input" placeholder="e.g. 349.99" required />
+      </div>
+
+      <!-- Category -->
+      <div class="admin-input-group">
+        <label for="category" class="admin-label">Category *</label>
+        <select id="category" name="category" class="admin-select" required>
+          <option value="">Select Category</option>
+          <option value="electronics">Electronics</option>
+          <option value="clothing">Clothing</option>
+          <option value="books">Books</option>
+          <option value="home">Home & Kitchen</option>
+        </select>
+      </div>
+
+      <!-- Stock -->
+      <div class="admin-input-group">
+        <label for="stock" class="admin-label">Stock Quantity *</label>
+        <input type="number" id="stock" name="stock" min="0" class="admin-input" placeholder="e.g. 25" required />
+      </div>
+
+      <!-- Promo Badge -->
+      <div class="admin-input-group">
+        <label for="badge" class="admin-label">Promo Badge (Optional)</label>
+        <input type="text" id="badge" name="badge" class="admin-input" placeholder="e.g. Hot, Sale, New" />
+      </div>
+
+      <!-- Rating (1-5) -->
+      <div class="admin-input-group">
+        <label for="rating" class="admin-label">Rating (1-5)</label>
+        <input type="number" id="rating" name="rating" min="1" max="5" step="0.1" value="5" class="admin-input" required />
+      </div>
+
+      <!-- Description -->
+      <div class="admin-input-group form-group-full">
+        <label for="description" class="admin-label">Product Description</label>
+        <textarea id="description" name="description" class="admin-textarea" placeholder="Provide a detailed description of the product..."></textarea>
+      </div>
+
+      <!-- Image Upload Area -->
+      <div class="admin-input-group form-group-full">
+        <label class="admin-label">Product Image *</label>
+        <div class="file-upload-wrap">
+          <i class="fa-solid fa-cloud-arrow-up"></i>
+          <span class="file-upload-text">Drag and drop your image, or browse</span>
+          <span class="file-upload-subtext">Supports PNG, JPG, JPEG (Max 5MB)</span>
+          <input type="file" name="image" class="file-upload-input" accept="image/*" required />
+        </div>
+        <div class="image-preview-area"></div>
+      </div>
+
+    </div>
+
+    <div class="form-actions-bar">
+      <a href="/admin" class="btn-admin btn-admin-secondary">Cancel</a>
+      <button type="submit" class="btn-admin btn-admin-primary">
+        <i class="fa-solid fa-floppy-disk"></i> Save Product
+      </button>
+    </div>
+  </form>
+</div>
+
+<%- include('../partials/admin-footer') %>

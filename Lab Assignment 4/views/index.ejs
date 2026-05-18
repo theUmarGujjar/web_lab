@@ -45,26 +45,22 @@
     <div class="product-grid" id="staggerFeatured">
       <% featured.forEach((product, i) => { %>
       <div class="product-card">
-        <a href="/products/<%= product.id %>" class="product-link" style="text-decoration: none; color: inherit; display: block;">
-          <div class="product-img-wrap">
-            <img src="<%= product.image %>" alt="<%= product.name %>" class="product-img"/>
-            <% if (product.badge) { %>
-            <span class="product-badge"><%= product.badge %></span>
-            <% } %>
-          </div>
-        </a>
+        <div class="product-img-wrap">
+          <img src="<%= product.image %>" alt="<%= product.name %>" class="product-img"/>
+          <% if (product.badge) { %>
+          <span class="product-badge"><%= product.badge %></span>
+          <% } %>
+        </div>
         <div class="product-info">
           <span class="product-category-tag"><%= product.category %></span>
-          <a href="/products/<%= product.id %>" class="product-link" style="text-decoration: none; color: inherit; display: block;">
-            <h3 class="product-name"><%= product.name %></h3>
-          </a>
+          <h3 class="product-name"><%= product.name %></h3>
           <div class="product-pricing">
             <span class="product-price">$<%= product.price.toFixed(2) %></span>
             <span class="product-original">$<%= product.originalPrice.toFixed(2) %></span>
           </div>
-          <a href="/products/<%= product.id %>" class="btn-primary btn-full btn-add-cart" style="text-align: center; text-decoration: none; display: block; line-height: 2.2rem;" aria-label="View Details">
-            View Details
-          </a>
+          <button class="btn-primary btn-full btn-add-cart" data-id="<%= product.id %>" aria-label="Add <%= product.name %> to cart">
+            Add to Cart
+          </button>
         </div>
       </div>
       <% }) %>

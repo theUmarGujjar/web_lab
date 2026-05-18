@@ -17,16 +17,13 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
 
 const indexRoutes = require('./routes/index');
 const shopRoutes  = require('./routes/shop');
 const adminRoutes = require('./routes/admin');
-const apiRoutes   = require('./routes/api');
 
 app.use('/products', shopRoutes);
 app.use('/admin',    adminRoutes);
-app.use('/api/v1',   apiRoutes);
 app.use('/',      indexRoutes);
 
 app.listen(PORT, () => {
