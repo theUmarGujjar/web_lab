@@ -1,0 +1,48 @@
+<%- include('partials/header') %>
+
+<div class="page-container">
+  <div class="page-header" data-animate="slide-up">
+    <h1>Contact Us</h1>
+    <p>Have a question or need help with an order? We're here for you. Fill out the form below or reach us through our standard channels.</p>
+  </div>
+
+  <div class="contact-grid" data-animate="fade-in">
+    <div class="contact-info prose">
+      <h2>Get In Touch</h2>
+      <p>Our support team is available Monday to Friday, 9:00 AM - 6:00 PM EST.</p>
+      
+      <h3>Email</h3>
+      <p>support@shopzone.com</p>
+
+      <h3>Phone</h3>
+      <p>+1 (800) 555-0198</p>
+
+      <h3>Headquarters</h3>
+      <p>123 Commerce Avenue<br/>Suite 400<br/>New York, NY 10001</p>
+    </div>
+
+    <div class="contact-form-wrap">
+      <form class="contact-form" onsubmit="event.preventDefault(); alert('Message sent successfully!');">
+        <div>
+          <label for="name">Full Name</label>
+          <input type="text" id="name" placeholder="John Doe" required />
+        </div>
+        <div>
+          <label for="email">Email Address</label>
+          <input type="email" id="email" placeholder="john@example.com" required />
+        </div>
+        <div>
+          <label for="subject">Subject</label>
+          <input type="text" id="subject" placeholder="Order Inquiry" required />
+        </div>
+        <div>
+          <label for="message">Message</label>
+          <textarea id="message" rows="5" placeholder="How can we help you?" required></textarea>
+        </div>
+        <button type="submit" class="btn-primary" style="margin-top: 8px;">Send Message</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>
