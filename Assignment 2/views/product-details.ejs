@@ -1,0 +1,158 @@
+<%- include('partials/header') %>
+
+<div class="container" style="padding-top: 3rem; padding-bottom: 5rem;">
+  
+  <!-- Back button and breadcrumbs -->
+  <div style="margin-bottom: 2rem; display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
+    <a href="/products" style="color: #64748b; text-decoration: none; display: flex; align-items: center; gap: 0.4rem; transition: color 0.2s;" onmouseover="this.style.color='#007bff'" onmouseout="this.style.color='#64748b'">
+      <i class="fa-solid fa-arrow-left-long"></i> Back to Catalog
+    </a>
+    <span style="color: #cbd5e1;">/</span>
+    <span style="color: #94a3b8; text-transform: capitalize;"><%= product.category %></span>
+    <span style="color: #cbd5e1;">/</span>
+    <span style="color: #1e293b; font-weight: 500;"><%= product.name %></span>
+  </div>
+
+  <% if (error) { %>
+    <div style="background-color: #fee2e2; border-left: 4px solid #ef4444; color: #b91c1c; padding: 1rem 1.5rem; font-size: 0.9rem; font-weight: 500; border-radius: 8px; margin-bottom: 2rem;">
+      <i class="fa-solid fa-circle-exclamation" style="margin-right: 0.5rem;"></i> <%= error %>
+    </div>
+  <% } %>
+
+  <!-- PDP Main Container -->
+  <div class="pdp-wrapper" style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 24px; padding: 3rem; box-shadow: 0 20px 40px rgba(0,0,0,0.03);">
+    
+    <!-- Left Column: Product Image Gallery -->
+    <div class="pdp-gallery" style="position: relative; border-radius: 16px; overflow: hidden; background: #f8fafc; border: 1px solid #f1f5f9; display: flex; align-items: center; justify-content: center; min-height: 450px;">
+      <img src="<%= product.image %>" alt="<%= product.name %>" style="max-width: 100%; max-height: 400px; object-fit: contain; transition: transform 0.5s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'"/>
+      
+      <!-- Badges -->
+      <% if (product.badge) { %>
+        <span style="position: absolute; top: 1.5rem; left: 1.5rem; background: linear-gradient(135deg, #007bff, #0056b3); color: white; padding: 0.4rem 1rem; border-radius: 50px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; box-shadow: 0 4px 10px rgba(0,123,255,0.25);"><%= product.badge %></span>
+      <% } %>
+      
+      <span style="position: absolute; top: 1.5rem; right: 1.5rem; background: #f43f5e; color: white; padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.8rem; font-weight: 700; box-shadow: 0 4px 10px rgba(244,63,94,0.2);">-<%= product.discountPct %>% Off</span>
+    </div>
+
+    <!-- Right Column: Product Detail Description & Buy Block -->
+    <div class="pdp-details" style="display: flex; flex-direction: column; justify-content: space-between;">
+      
+      <div>
+        <!-- Category Tag -->
+        <span style="font-size: 0.8rem; font-weight: 600; text-transform: uppercase; color: #007bff; letter-spacing: 0.1em; margin-bottom: 0.5rem; display: block;"><%= product.category %></span>
+        
+        <!-- Product Name -->
+        <h1 style="font-size: 2.2rem; font-weight: 800; color: #0f172a; margin: 0 0 1rem 0; line-height: 1.2;"><%= product.name %></h1>
+        
+        <!-- Rating Stars -->
+        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;">
+          <div style="color: #fbbf24; display: flex; gap: 2px;">
+            <%- product.starsHtml %>
+          </div>
+          <span style="color: #64748b; font-size: 0.85rem; font-weight: 500;">(4.8 / 5.0 Rating)</span>
+        </div>
+
+        <!-- Divider -->
+        <hr style="border: 0; border-top: 1px solid #e2e8f0; margin-bottom: 1.5rem;"/>
+
+        <!-- Pricing Block -->
+        <div style="display: flex; align-items: baseline; gap: 1rem; margin-bottom: 1.5rem;">
+          <span style="font-size: 2rem; font-weight: 800; color: #0f172a;">$<%= product.price.toFixed(2) %></span>
+          <span style="font-size: 1.2rem; text-decoration: line-through; color: #94a3b8; font-weight: 500;">$<%= product.originalPrice.toFixed(2) %></span>
+        </div>
+
+        <!-- Stock Status indicator -->
+        <div style="margin-bottom: 1.5rem;">
+          <% if (product.stock === 0) { %>
+            <div style="display: inline-flex; align-items: center; gap: 0.5rem; background-color: #fee2e2; border: 1px solid #fecaca; color: #991b1b; padding: 0.5rem 1rem; border-radius: 50px; font-size: 0.85rem; font-weight: 600;">
+              <span style="width: 8px; height: 8px; border-radius: 50%; background-color: #ef4444; box-shadow: 0 0 0 3px rgba(239,68,68,0.2);"></span>
+              Out of Stock
+            </div>
+          <% } else if (product.stock <= 5) { %>
+            <div style="display: inline-flex; align-items: center; gap: 0.5rem; background-color: #fef3c7; border: 1px solid #fde68a; color: #92400e; padding: 0.5rem 1rem; border-radius: 50px; font-size: 0.85rem; font-weight: 600;">
+              <span style="width: 8px; height: 8px; border-radius: 50%; background-color: #f59e0b; box-shadow: 0 0 0 3px rgba(245,158,11,0.2);"></span>
+              Low Stock (Only <%= product.stock %> items left!)
+            </div>
+          <% } else { %>
+            <div style="display: inline-flex; align-items: center; gap: 0.5rem; background-color: #dcfce7; border: 1px solid #bbf7d0; color: #166534; padding: 0.5rem 1rem; border-radius: 50px; font-size: 0.85rem; font-weight: 600;">
+              <span style="width: 8px; height: 8px; border-radius: 50%; background-color: #22c55e; box-shadow: 0 0 0 3px rgba(34,197,94,0.2);"></span>
+              In Stock (<%= product.stock %> units available)
+            </div>
+          <% } %>
+        </div>
+
+        <!-- Description -->
+        <p style="font-size: 1rem; line-height: 1.6; color: #475569; margin-bottom: 2rem;"><%= product.description || 'No detailed description is available for this product yet. Rest assured, it is built with high-quality components and premium durability.' %></p>
+      </div>
+
+      <!-- Action Stepper Form -->
+      <form action="/products/<%= product.id %>/buy" method="POST">
+        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+          
+          <!-- Quantity Stepper -->
+          <div style="display: flex; align-items: center; gap: 1rem;">
+            <span style="font-size: 0.95rem; font-weight: 600; color: #334155;">Quantity:</span>
+            
+            <div style="display: flex; align-items: center; border: 1px solid #cbd5e1; border-radius: 8px; overflow: hidden; background: #fff;">
+              <button type="button" id="minusBtn" style="border: 0; background: none; color: #64748b; font-size: 1.1rem; width: 40px; height: 40px; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; justify-content: center;" <%= product.stock === 0 ? 'disabled' : '' %>>
+                <i class="fa-solid fa-minus"></i>
+              </button>
+              
+              <input type="number" id="quantityInput" name="quantity" value="1" min="1" max="<%= product.stock %>" style="border: 0; width: 50px; text-align: center; font-size: 1rem; font-weight: 700; color: #0f172a; outline: none; -moz-appearance: textfield;" readonly <%= product.stock === 0 ? 'disabled' : '' %>/>
+              
+              <button type="button" id="plusBtn" style="border: 0; background: none; color: #64748b; font-size: 1.1rem; width: 40px; height: 40px; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; justify-content: center;" <%= product.stock === 0 ? 'disabled' : '' %>>
+                <i class="fa-solid fa-plus"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Checkout Buttons -->
+          <div style="display: grid; grid-template-columns: 1fr; gap: 1rem; width: 100%;">
+            <% if (product.stock > 0) { %>
+              <button type="submit" class="btn-primary" style="height: 3.2rem; font-weight: 600; font-size: 1rem; border-radius: 12px; display: flex; align-items: center; justify-content: center; gap: 0.6rem; cursor: pointer; border: 0; width: 100%;">
+                <i class="fa-solid fa-bag-shopping"></i> Buy Now
+              </button>
+            <% } else { %>
+              <button type="button" disabled style="height: 3.2rem; font-weight: 600; font-size: 1rem; border-radius: 12px; display: flex; align-items: center; justify-content: center; gap: 0.6rem; background: #e2e8f0; color: #94a3b8; border: 1px solid #cbd5e1; cursor: not-allowed; width: 100%;">
+                <i class="fa-solid fa-triangle-exclamation"></i> Out of Stock
+              </button>
+            <% } %>
+          </div>
+
+        </div>
+      </form>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Quantity Stepper Logic -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const minusBtn = document.getElementById('minusBtn');
+    const plusBtn = document.getElementById('plusBtn');
+    const quantityInput = document.getElementById('quantityInput');
+
+    if (minusBtn && plusBtn && quantityInput) {
+      const maxStock = parseInt(quantityInput.getAttribute('max')) || 0;
+
+      minusBtn.addEventListener('click', () => {
+        let val = parseInt(quantityInput.value) || 1;
+        if (val > 1) {
+          quantityInput.value = val - 1;
+        }
+      });
+
+      plusBtn.addEventListener('click', () => {
+        let val = parseInt(quantityInput.value) || 1;
+        if (val < maxStock) {
+          quantityInput.value = val + 1;
+        }
+      });
+    }
+  });
+</script>
+
+<%- include('partials/footer') %>

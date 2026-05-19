@@ -1,0 +1,61 @@
+<%- include('partials/header') %>
+
+<main class="sales-dashboard">
+  <section class="dashboard-top">
+    <h1>Sales Dashboard</h1>
+    <p class="muted">Live sales overview — updates every 10 seconds.</p>
+  </section>
+
+  <section class="dashboard-cards">
+    <div class="card">
+      <h3>Total Revenue</h3>
+      <p id="totalRevenue">$<%= stats ? stats.totalRevenue.toFixed(2) : '0.00' %></p>
+    </div>
+    <div class="card">
+      <h3>Total Orders</h3>
+      <p id="totalOrders"><%= stats ? stats.totalOrders : 0 %></p>
+    </div>
+    <div class="card">
+      <h3>Revenue By Category</h3>
+      <ul id="revenueByCategory">
+        <% if (stats && stats.revenueByCategory) { %>
+          <% stats.revenueByCategory.forEach(cat => { %>
+            <li><strong><%= cat.category %></strong>: $<%= cat.revenue.toFixed(2) %></li>
+          <% }) %>
+        <% } %>
+      </ul>
+    </div>
+  </section>
+
+  <section class="dashboard-tables">
+    <div class="panel">
+      <h4>Top Products (by Revenue)</h4>
+      <table id="topProducts" class="table">
+        <thead><tr><th>Product</th><th>Qty</th><th>Revenue</th></tr></thead>
+        <tbody>
+          <% if (stats && stats.topProducts) { %>
+            <% stats.topProducts.forEach(p => { %>
+              <tr><td><%= p.name %></td><td><%= p.qty %></td><td>$<%= p.revenue.toFixed(2) %></td></tr>
+            <% }) %>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="panel">
+      <h4>Recent Sales</h4>
+      <ul id="recentSales">
+        <% if (recent) { %>
+          <% recent.forEach(s => { %>
+            <li><strong><%= s.name %></strong> — <%= s.quantity %> × $<%= s.price.toFixed(2) %> — $<%= s.total.toFixed(2) %> — <small><%= new Date(s.createdAt).toLocaleString() %></small></li>
+          <% }) %>
+        <% } %>
+      </ul>
+    </div>
+  </section>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJ+Y6Jp0Z+6U8Gk2Q9FQ5p4z6b5f5Q5jv5c5s=" crossorigin="anonymous"></script>
+  <script src="/js/sales.js"></script>
+</main>
+
+<%- include('partials/footer') %>

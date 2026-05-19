@@ -1,0 +1,204 @@
+<%- include('partials/header') %>
+
+<div class="shop-page">
+
+  <!-- ===== FILTER OVERLAY (mobile) ===== -->
+  <div class="filter-overlay" id="filterOverlay"></div>
+
+  <!-- ===== FILTER SIDEBAR ===== -->
+  <aside class="filter-sidebar" id="filterSidebar">
+    <div class="sidebar-header">
+      <h3><i class="fa-solid fa-sliders"></i> Filters</h3>
+      <button class="sidebar-close" id="sidebarClose" aria-label="Close filters">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <form id="filterForm" action="/products" method="GET">
+      <!-- Preserve sort if set -->
+      <input type="hidden" name="sort" value="<%= filters.sort %>"/>
+      <!-- Preserve search if set -->
+      <% if (filters.search) { %>
+      <input type="hidden" name="search" value="<%= filters.search %>"/>
+      <% } %>
+
+      <!-- Category -->
+      <div class="filter-group">
+        <h4 class="filter-group-title">Category</h4>
+        <% categories.forEach(cat => { %>
+        <label class="filter-radio" id="filterCat<%= cat.id %>">
+          <input
+            type="radio"
+            name="category"
+            value="<%= cat.id %>"
+            <%= filters.category === cat.id ? 'checked' : '' %>
+            onchange="document.getElementById('filterForm').submit()"
+          />
+          <span class="radio-custom"></span>
+          <%= cat.label %>
+        </label>
+        <% }) %>
+      </div>
+
+      <!-- Price Range -->
+      <div class="filter-group">
+        <h4 class="filter-group-title">Price Range</h4>
+        <div class="price-inputs">
+          <div class="price-input-wrap">
+            <span class="price-symbol">$</span>
+            <input type="number" id="minPrice" name="minPrice" placeholder="Min"
+              value="<%= filters.minPrice %>" min="0" class="price-input"/>
+          </div>
+          <span class="price-sep">—</span>
+          <div class="price-input-wrap">
+            <span class="price-symbol">$</span>
+            <input type="number" id="maxPrice" name="maxPrice" placeholder="Max"
+              value="<%= filters.maxPrice %>" min="0" class="price-input"/>
+          </div>
+        </div>
+        <button type="submit" class="btn-apply-price" id="applyPriceBtn">Apply Price</button>
+      </div>
+
+      <!-- Sort -->
+      <div class="filter-group">
+        <h4 class="filter-group-title">Sort By</h4>
+        <select name="sort" class="filter-select" id="sortSelectSidebar" onchange="document.getElementById('filterForm').submit()">
+          <option value="featured"    <%= filters.sort === 'featured'   ? 'selected' : '' %>>Featured</option>
+          <option value="price-low"   <%= filters.sort === 'price-low'  ? 'selected' : '' %>>Price: Low to High</option>
+          <option value="price-high"  <%= filters.sort === 'price-high' ? 'selected' : '' %>>Price: High to Low</option>
+          <option value="rating"      <%= filters.sort === 'rating'     ? 'selected' : '' %>>Highest Rated</option>
+          <option value="reviews"     <%= filters.sort === 'reviews'    ? 'selected' : '' %>>Most Reviewed</option>
+        </select>
+      </div>
+
+      <!-- Clear -->
+      <a href="/products" class="btn-clear-filters" id="clearFiltersBtn">
+        <i class="fa-solid fa-rotate-left"></i> Clear All Filters
+      </a>
+    </form>
+  </aside>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="shop-main">
+
+    <!-- Top Bar -->
+    <div class="shop-topbar">
+      <div class="topbar-left">
+        <button class="btn-filter-toggle" id="filterToggleBtn" aria-label="Open filters">
+          <i class="fa-solid fa-sliders"></i> Filters
+        </button>
+        <p class="results-count">
+          <strong><%= totalCount %></strong> result<%= totalCount !== 1 ? 's' : '' %>
+          <% if (filters.category !== 'all') { %> in <strong><%= filters.category %></strong><% } %>
+          <% if (filters.search) { %> for &ldquo;<strong><%= filters.search %></strong>&rdquo;<% } %>
+        </p>
+      </div>
+      <div class="topbar-right">
+        <label for="sortSelectTop" class="sort-label">Sort:</label>
+        <select id="sortSelectTop" class="filter-select filter-select--sm" onchange="updateSort(this.value)">
+          <option value="featured"    <%= filters.sort === 'featured'   ? 'selected' : '' %>>Featured</option>
+          <option value="price-low"   <%= filters.sort === 'price-low'  ? 'selected' : '' %>>Price: Low to High</option>
+          <option value="price-high"  <%= filters.sort === 'price-high' ? 'selected' : '' %>>Price: High to Low</option>
+          <option value="rating"      <%= filters.sort === 'rating'     ? 'selected' : '' %>>Highest Rated</option>
+          <option value="reviews"     <%= filters.sort === 'reviews'    ? 'selected' : '' %>>Most Reviewed</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Active Filter Pills -->
+    <% const hasFilters = filters.category !== 'all' || filters.minPrice || filters.maxPrice || filters.search; %>
+    <% if (hasFilters) { %>
+    <div class="active-filters" id="activeFilters">
+      <span class="active-filters-label">Active:</span>
+      <% if (filters.category !== 'all') { %>
+      <a href="/products?sort=<%= filters.sort %>" class="filter-pill">
+        <%= filters.category %> <i class="fa-solid fa-xmark"></i>
+      </a>
+      <% } %>
+      <% if (filters.minPrice || filters.maxPrice) { %>
+      <a href="/products?category=<%= filters.category %>&sort=<%= filters.sort %>" class="filter-pill">
+        $<%= filters.minPrice || '0' %> — $<%= filters.maxPrice || 'any' %>
+        <i class="fa-solid fa-xmark"></i>
+      </a>
+      <% } %>
+      <% if (filters.search) { %>
+      <a href="/products?category=<%= filters.category %>&sort=<%= filters.sort %>" class="filter-pill">
+        &ldquo;<%= filters.search %>&rdquo; <i class="fa-solid fa-xmark"></i>
+      </a>
+      <% } %>
+      <a href="/products" class="filter-pill filter-pill--clear">Clear all</a>
+    </div>
+    <% } %>
+
+    <!-- Product Grid -->
+    <% if (products.length === 0) { %>
+    <div class="empty-state" data-animate="fade-in">
+      <h3>No products found</h3>
+      <p>Try adjusting your filters or search term.</p>
+      <a href="/products" class="btn-primary">Browse All Products</a>
+    </div>
+    <% } else { %>
+    <div class="product-grid" id="staggerShop">
+      <% products.forEach((product, i) => { %>
+      <div class="product-card">
+        <a href="/products/<%= product.id %>" class="product-link" style="text-decoration: none; color: inherit; display: block;">
+          <div class="product-img-wrap">
+            <img src="<%= product.image %>" alt="<%= product.name %>" class="product-img" loading="lazy" />
+            <% if (product.badge) { %>
+            <span class="product-badge"><%= product.badge %></span>
+            <% } %>
+            <span class="product-discount-tag">-<%= product.discountPct %>%</span>
+          </div>
+        </a>
+        <div class="product-info">
+          <span class="product-category-tag"><%= product.category %></span>
+          <a href="/products/<%= product.id %>" class="product-link" style="text-decoration: none; color: inherit; display: block;">
+            <h3 class="product-name"><%= product.name %></h3>
+          </a>
+          <p class="product-desc"><%= product.description %></p>
+          <div class="product-pricing">
+            <span class="product-price">$<%= product.price.toFixed(2) %></span>
+            <span class="product-original">$<%= product.originalPrice.toFixed(2) %></span>
+          </div>
+          <a href="/products/<%= product.id %>" class="btn-primary btn-full btn-add-cart" style="text-align: center; text-decoration: none; display: block; line-height: 2.2rem;" aria-label="View Details">
+            View Details
+          </a>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+    <% } %>
+
+    <!-- Pagination Controls -->
+    <% if (totalPages > 1) { %>
+    <div class="pagination" style="display: flex; justify-content: center; gap: 10px; margin-top: 2rem;">
+      <% if (currentPage > 1) { %>
+        <a href="/products?page=<%= currentPage - 1 %>&<%= queryString %>" class="btn-page" style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; text-decoration: none; color: #333;">Previous</a>
+      <% } else { %>
+        <span class="btn-page disabled" style="padding: 8px 12px; border: 1px solid #eee; border-radius: 4px; color: #aaa; cursor: not-allowed;">Previous</span>
+      <% } %>
+
+      <% for(let i = 1; i <= totalPages; i++) { %>
+        <a href="/products?page=<%= i %>&<%= queryString %>" class="btn-page <%= currentPage === i ? 'active' : '' %>" style="padding: 8px 12px; border: 1px solid <%= currentPage === i ? '#007bff' : '#ccc' %>; border-radius: 4px; text-decoration: none; color: <%= currentPage === i ? '#fff' : '#333' %>; background-color: <%= currentPage === i ? '#007bff' : 'transparent' %>;"><%= i %></a>
+      <% } %>
+
+      <% if (currentPage < totalPages) { %>
+        <a href="/products?page=<%= currentPage + 1 %>&<%= queryString %>" class="btn-page" style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; text-decoration: none; color: #333;">Next</a>
+      <% } else { %>
+        <span class="btn-page disabled" style="padding: 8px 12px; border: 1px solid #eee; border-radius: 4px; color: #aaa; cursor: not-allowed;">Next</span>
+      <% } %>
+    </div>
+    <% } %>
+
+  </main>
+</div>
+
+<script>
+function updateSort(value) {
+  const url = new URL(window.location.href);
+  url.searchParams.set('sort', value);
+  window.location.href = url.toString();
+}
+</script>
+
+<%- include('partials/footer') %>

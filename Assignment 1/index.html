@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ecommerce App</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">ShopEasy</div>
+        <div class="hamburger" id="hamburger" aria-label="Open menu" tabindex="0">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <nav id="main-nav">
+            <a href="#">Home</a>
+            <a href="#">Deals</a>
+            <a href="#">Orders</a>
+            <a href="#">Account</a>
+            <span class="cart-icon" style="cursor:pointer; margin-left:2rem; font-size:1.3rem;">🛒</span>
+        </nav>
+    </header>
+    <div class="main">
+        <div class="products"></div>
+    </div>
+    <div class="cart">
+        <div class="cart-title">Your Cart</div>
+        <div class="cart-items"></div>
+        <div class="cart-total">Total: $0.00</div>
+        <button class="checkout-btn">Checkout</button>
+    </div>
+    <script src="js/script.js"></script>
+</body>
+</html>

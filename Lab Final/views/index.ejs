@@ -1,0 +1,85 @@
+<%- include('partials/header') %>
+
+<!-- ===== HERO ===== -->
+<section class="hero" id="home">
+  <div class="container hero-inner">
+    <div class="hero-content">
+      <p class="hero-tag">New arrivals every day</p>
+      <h1>Find Everything<br/>You Need</h1>
+      <p class="hero-sub">Shop thousands of products across electronics, clothing, books, and more — with fast delivery and unbeatable prices.</p>
+      <div class="hero-actions">
+        <a href="/products" class="btn-primary" id="heroShopBtn">Shop Now</a>
+        <a href="/products?badge=Deal" class="btn-outline" id="heroDealsBtn">View Deals</a>
+      </div>
+    </div>
+    <div class="hero-image">
+      <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=1200&q=80" alt="Fashion shopping" class="hero-img-element"/>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CATEGORIES ===== -->
+<section class="section" id="categories">
+  <div class="container">
+    <div class="section-header" data-animate="slide-up">
+      <h2 class="section-title">Shop by Category</h2>
+      <a href="/products" class="see-all-link" id="seeAllCats">See all categories &rarr;</a>
+    </div>
+    <div class="category-tiles" id="staggerCategories">
+      <% categories.forEach((cat, i) => { %>
+      <a href="/products?category=<%= cat.id %>" class="cat-tile">
+        <span class="cat-tile-label"><%= cat.label %></span>
+      </a>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FEATURED / BEST SELLERS ===== -->
+<section class="section" id="featured">
+  <div class="container">
+    <div class="section-header" data-animate="slide-up">
+      <h2 class="section-title">Best Sellers</h2>
+      <a href="/products" class="see-all-link" id="seeAllFeatured">View all &rarr;</a>
+    </div>
+    <div class="product-grid" id="staggerFeatured">
+      <% featured.forEach((product, i) => { %>
+      <div class="product-card">
+        <div class="product-img-wrap">
+          <img src="<%= product.image %>" alt="<%= product.name %>" class="product-img"/>
+          <% if (product.badge) { %>
+          <span class="product-badge"><%= product.badge %></span>
+          <% } %>
+        </div>
+        <div class="product-info">
+          <span class="product-category-tag"><%= product.category %></span>
+          <h3 class="product-name"><%= product.name %></h3>
+          <div class="product-pricing">
+            <span class="product-price">$<%= product.price.toFixed(2) %></span>
+            <span class="product-original">$<%= product.originalPrice.toFixed(2) %></span>
+          </div>
+          <button class="btn-primary btn-full btn-add-cart" data-id="<%= product.id %>" aria-label="Add <%= product.name %> to cart">
+            Add to Cart
+          </button>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PROMO BANNER ===== -->
+<section class="promo-banner">
+  <div class="container">
+    <div class="promo-inner">
+      <div class="promo-text">
+        <p class="promo-eyebrow"><i class="fa-solid fa-truck-fast"></i> Free Shipping</p>
+        <h2>On orders over $50</h2>
+        <p>Shop today and get your items delivered fast, right to your door.</p>
+      </div>
+      <a href="/products" class="btn-primary" id="promoBannerBtn">Start Shopping</a>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

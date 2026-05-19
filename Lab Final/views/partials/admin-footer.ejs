@@ -1,0 +1,88 @@
+    </main>
+  </div>
+</div>
+
+<!-- Beautiful Custom Admin Confirmation Alert Modal -->
+<div class="admin-modal-overlay" id="confirmDeleteModalOverlay">
+  <div class="admin-modal">
+    <div class="modal-body">
+      <div class="modal-icon-wrap">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+      </div>
+      <h3 class="modal-title">Delete Product?</h3>
+      <p class="modal-text">Are you absolutely sure you want to delete this product? This action cannot be undone and will immediately remove the item from the catalog inventory.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-admin btn-admin-secondary" id="cancelDeleteBtn">Cancel</button>
+      <button class="btn-admin btn-admin-primary" style="background-color: #ef4444;" id="confirmDeleteBtn">Delete</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Global Admin Handlers & Interactive Actions
+  document.addEventListener('DOMContentLoaded', () => {
+    // Delete Confirmation Logic
+    const deleteOverlay = document.getElementById('confirmDeleteModalOverlay');
+    const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+    const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+    let deleteFormToSubmit = null;
+
+    window.confirmDelete = function(event, form) {
+      event.preventDefault();
+      deleteFormToSubmit = form;
+      deleteOverlay.classList.add('active');
+    };
+
+    if (cancelDeleteBtn) {
+      cancelDeleteBtn.addEventListener('click', () => {
+        deleteOverlay.classList.remove('active');
+        deleteFormToSubmit = null;
+      });
+    }
+
+    if (confirmDeleteBtn) {
+      confirmDeleteBtn.addEventListener('click', () => {
+        if (deleteFormToSubmit) {
+          deleteFormToSubmit.submit();
+        }
+        deleteOverlay.classList.remove('active');
+      });
+    }
+
+    // Close modal on escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && deleteOverlay.classList.contains('active')) {
+        deleteOverlay.classList.remove('active');
+        deleteFormToSubmit = null;
+      }
+    });
+
+    // File Drag and Drop visual feedback & preview
+    const fileInput = document.querySelector('.file-upload-input');
+    const uploadWrap = document.querySelector('.file-upload-wrap');
+    const previewArea = document.querySelector('.image-preview-area');
+
+    if (fileInput && uploadWrap) {
+      fileInput.addEventListener('dragenter', () => uploadWrap.classList.add('dragover'));
+      fileInput.addEventListener('dragleave', () => uploadWrap.classList.remove('dragover'));
+      fileInput.addEventListener('drop', () => uploadWrap.classList.remove('dragover'));
+
+      fileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file && file.type.startsWith('image/')) {
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            if (previewArea) {
+              previewArea.innerHTML = `<img src="${event.target.result}" class="image-preview-thumb" alt="Upload Preview" />`;
+            }
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+    }
+  });
+</script>
+
+</body>
+</html>
